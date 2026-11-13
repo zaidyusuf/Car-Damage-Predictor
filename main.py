@@ -1,10 +1,11 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from helper import predict
 
 app = FastAPI(title="Car Damage Classifier")
 
-# Enable CORS so your browser frontend can talk to FastAPI
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -12,6 +13,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def serve_frontend():
+    return FileResponse("index.html")
+
 
 @app.post("/predict")
 async def get_prediction(file: UploadFile = File(...)):
